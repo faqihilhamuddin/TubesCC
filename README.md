@@ -1,1 +1,4 @@
-# Tubescc
+UNTUK LOGIN ADMIN :
+
+Email : admin
+Password : admin

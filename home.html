@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home.css">
+    <title>Home User</title>
+</head>
+<body>
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="nav">
+            <div class="nav-logo">
+                <img src="Group 7.png" alt="Logo" class="logo">
+            </div>
+            <div class="nav-center">
+                <ul>
+                    <li><a href="#" class="link active">Home</a></li>
+                    <li><a href="about.html" class="link">About</a></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <button class="btn logout" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content with iFrame -->
+    <div class="main-content">
+        <iframe src="https://prediksikel7.streamlit.app/?embed=true"></iframe>
+    </div>
+
+    <script>
+        function logout() {
+            window.location.href = 'login.html'; 
+        }
+    </script>
+</body>
+</html>

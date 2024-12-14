@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register & Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="login.css">
+    <script type="module" src="firebaseauth.js"></script>
+</head>
+<body>
+
+    <nav class="nav">
+        <div class="nav-logo">
+            <p>KELOMPOK 7</p>
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <ul>
+                <li><a href="#" class="link">Home</a></li>
+                <li><a href="#" class="link">Blog</a></li>
+                <li><a href="#" class="link">Services</a></li>
+                <li><a href="#" class="link ">About</a></li>
+            </ul>
+        </div>
+        <div class="nav-button">
+            <button class="btn white-btn" id="signInButton" >Masuk</button>
+            <button class="btn" id="signUpButton" >Daftar</button>
+        </div>
+    </nav>
+
+    <div class="form-container">
+        <div class="form-box">
+
+            <!-- Form Sign In -->
+            <div class="form-content" id="signInForm">
+                <h2 class="form-title">Masuk</h2>
+                <form method="post" action="">
+                    <div id="signInMessage" class="messageDiv" style="display:none;"></div>
+                    <div class="input-group">
+                        <input type="email" id="email" placeholder="Email" required>
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="password" placeholder="Password" required>
+                        <label for="password">Password</label>
+                    </div>
+                    <!-- Pilihan Role untuk Admin -->
+                    <div class="input-group">
+                        <select id="roleSelect" required>
+                            <option value="" disabled selected>Pilih Role</option>
+                            <option value="user">Pengguna</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <label for="roleSelect">Role</label>
+                    </div>
+                    <button type="button" class="btn" id="submitSignIn">Masuk</button>
+                    <p class="recover"><a href="#">Lupa Password?</a></p>
+                </form>
+            </div>
+
+            <!-- Form Sign Up -->
+            <div class="form-content" id="signUpForm" style="display: none;">
+                <h2 class="form-title">Daftar</h2>
+                <form method="post" action="">
+                    <div id="signUpMessage" class="messageDiv" style="display:none;"></div>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="fName" placeholder="Nama Depan" required>
+                        <label for="fName">Nama Depan</label>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="lName" placeholder="Nama Belakang" required>
+                        <label for="lName">Nama Belakang</label>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="rEmail" placeholder="Email" required>
+                        <label for="rEmail">Email</label>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="rPassword" placeholder="Password" required>
+                        <label for="rPassword">Password</label>
+                    </div>
+                    <button type="button" class="btn" id="submitSignUp">Daftar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
