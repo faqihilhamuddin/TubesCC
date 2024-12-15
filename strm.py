@@ -7,26 +7,16 @@ import seaborn as sns
 from tensorflow.keras.callbacks import EarlyStopping
 import streamlit as st
 
+st.title("Prediksi Kasus Stunting melalui Faktor Sanitasi")
 
-st.title("Prediksi Kasus Stunting melalui faktor Sanitasi")
+file_path = "Stunting_Sanitasi.xlsx"
+df = pd.read_excel(file_path)
 
-
-data = {
-    'Tahun': [2018, 2019, 2020, 2021, 2022, 2023, 2024],
-    'Stunting': [30.8, 27.7, 26.92, 24.4, 21.6, 21.5, 20.7],
-    'Sanitasi': [67.89, 69.27, 77.39, 79.53, 80.29, 81, 83.6]
-}
-df = pd.DataFrame(data)
-
-
-# u/ tabel data atas
 st.write("### Data Asli Kasus Stunting dan Sanitasi")
 df_display = df.copy()
-df_display['Tahun'] = df_display['Tahun'].astype(int)  
+df_display['Tahun'] = df_display['Tahun'].astype(int)
 st.table(df_display)
 
-
-# scaling data
 scaler_stunting = MinMaxScaler(feature_range=(0, 1))
 stunting_scaled = scaler_stunting.fit_transform(df['Stunting'].values.reshape(-1, 1))
 
@@ -34,7 +24,6 @@ scaler_sanitasi = MinMaxScaler(feature_range=(0, 1))
 sanitas_scaled = scaler_sanitasi.fit_transform(df['Sanitasi'].values.reshape(-1, 1))
 
 combined_features = np.hstack([stunting_scaled, sanitas_scaled])
-
 
 look_back = 2
 
@@ -47,7 +36,6 @@ def create_dataset(dataset, look_back=1):
 
 X, Y = create_dataset(combined_features, look_back)
 
-
 train_size = 5
 val_size = 1
 
@@ -55,7 +43,6 @@ X_train, Y_train = X[:train_size], Y[:train_size]
 X_val, Y_val = X[train_size:train_size + val_size], Y[train_size:train_size + val_size]
 X_test, Y_test = X[train_size + val_size:], Y[train_size + val_size:]
 
-# uji LSTM
 model = tf.keras.Sequential([
     tf.keras.layers.LSTM(20, return_sequences=True, input_shape=(look_back, combined_features.shape[1])),
     tf.keras.layers.Dropout(0.2),
@@ -65,10 +52,8 @@ model = tf.keras.Sequential([
 ])
 model.compile(optimizer='adam', loss='mean_squared_error')
 
-# Callback 
 early_stopping = EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
 
-# Training model
 with st.spinner("Training model..."):
     history = model.fit(X_train, Y_train, 
                         epochs=100, 
@@ -77,7 +62,6 @@ with st.spinner("Training model..."):
                         validation_data=(X_val, Y_val), 
                         callbacks=[early_stopping])
 
-# pred data training
 predictions_train = model.predict(X, verbose=0)
 predictions_train_rescaled = scaler_stunting.inverse_transform(predictions_train)
 actual_values = df['Stunting'].values
@@ -88,7 +72,6 @@ mse = np.mean((actual_values[look_back:] - predictions_train_rescaled.flatten())
 st.write(f"### MAE : {mae:.2f}")
 st.write(f"### MSE : {mse:.2f}")
 
-# u/ pred
 future_sanitasi = [84, 85, 86, 87, 88, 89, 90, 91]
 future_sanitasi_scaled = scaler_sanitasi.transform(np.array(future_sanitasi).reshape(-1, 1))
 
@@ -106,12 +89,10 @@ predictions_future_rescaled = scaler_stunting.inverse_transform(np.array(predict
 all_years = list(range(2018, 2033))
 all_predictions = np.concatenate([predictions_train_rescaled.flatten(), predictions_future_rescaled.flatten()])
 
-
 st.write("### Hasil Prediksi")
 for year, value in zip(all_years, all_predictions):
     st.write(f"Tahun {year}: {value:.2f}")
 
-# tabel
 fig, ax = plt.subplots(figsize=(12, 6))
 ax.plot(df['Tahun'], df['Stunting'], label='Data Asli', marker='o', color='blue')
 ax.plot(range(2018 + look_back, 2025), predictions_train_rescaled, label='Prediksi (2018-2024)', linestyle='dotted', marker='s', color='red')
@@ -123,7 +104,6 @@ ax.set_title('Prediksi Kasus Stunting dengan Sanitasi (2018-2030)')
 ax.grid()
 st.pyplot(fig)
 
-# u/ heatmap
 heatmap = df[['Stunting', 'Sanitasi']].corr()
 st.write("### Korelasi Stunting dan Sanitasi")
 fig_corr, ax_corr = plt.subplots(figsize=(6, 4))
