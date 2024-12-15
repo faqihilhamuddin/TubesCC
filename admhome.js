@@ -1,6 +1,5 @@
+// admhome.js
 
-
-// config data firebase faqih
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
 import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore.js";
 
@@ -14,11 +13,10 @@ const firebaseConfig = {
     measurementId: "G-CZVEN08RZ3"
 };
 
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Fungsi untuk memuat data pengguna
+// loaduser
 async function loadUsers() {
     const userTable = document.getElementById("userTable");
     userTable.innerHTML = ""; 
@@ -39,12 +37,10 @@ async function loadUsers() {
             `;
             userTable.appendChild(row);
         });
-
-        
         document.querySelectorAll(".delete-btn").forEach(button => {
             button.addEventListener("click", function() {
                 const userId = this.getAttribute("data-user-id");
-                deleteUser(userId); // Panggil fungsi deleteUser
+                deleteUser(userId);
             });
         });
     } catch (error) {
@@ -52,13 +48,27 @@ async function loadUsers() {
     }
 }
 
-// hapus user dari firestore
+// hapus user
 async function deleteUser(userId) {
     if (confirm("Apakah Anda yakin ingin menghapus pengguna ini?")) {
         try {
+            
             await deleteDoc(doc(db, "users", userId));
-            alert("Pengguna berhasil dihapus!");
-            loadUsers(); 
+
+            const response = await fetch("http://localhost:3000/deleteUser", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ userId }), 
+            });
+
+            if (response.ok) {
+                alert("Pengguna berhasil dihapus!");
+                loadUsers(); 
+            } else {
+                alert("Gagal menghapus pengguna di Firebase Authentication");
+            }
         } catch (error) {
             console.error("Gagal menghapus pengguna:", error);
         }
@@ -70,6 +80,5 @@ function logout() {
     alert("Anda telah logout!");
     window.location.href = "login.html"; 
 }
-
 
 window.onload = loadUsers;
